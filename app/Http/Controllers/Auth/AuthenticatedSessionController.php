@@ -17,8 +17,9 @@ class AuthenticatedSessionController extends Controller
     {
 
     if(!Auth::attempt($request->only('email', 'password'))){
-        throw ValidationException::withMessages([
-            'email' => ['The provided credentials are incorrect.'],
+        return response()->json([
+            'status'=> false,
+            'error'=> 'Invalide-credntials'
         ]);
         }
 
@@ -39,7 +40,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $request->user()->tokens()->delete();
         return response()->json(['message' => 'Logout successful']);
     }
 }
