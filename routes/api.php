@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +17,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 |
 */
 
+
+// Authentication System 
+
 Route::post('/register', [RegisteredUserController::class, 'store']);
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:sanctum');
@@ -23,3 +27,15 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->midd
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+// Role Base access Control
+Route::middleware('auth:sanctum', 'permission:admin-access')->get('/admin-data', function(){
+    return response()->json(['data'=>'Admin data']);
+});
+
+Route::middleware('auth:sanctum', 'permission:user-access')->get('/user-data', function(){
+    return reponse()->json(['data'=>'User data']);
+});
+
+Route::post('/assign-role', [RoleController::class, 'assignRole']);
