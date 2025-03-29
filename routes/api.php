@@ -44,9 +44,14 @@ Route::post('/assign-role', [RoleController::class, 'assignRole']);
 
 /// POST Route operation
 Route::middleware('auth:sanctum')->group(function() {
-    Route::post('/posts', [PostController::class, 'store']);
     Route::get('/posts', [PostController::class, 'index']);
     Route::get('/posts/{id}', [PostController::class, 'show']);
+});
+
+/// POST Route operation (Done olny by the admin)
+Route::middleware('auth:sanctum', 'permission:admin-access')->group(function(){
+    Route::post('/posts', [PostController::class, 'store']);
     Route::put('/posts/{id}', [PostController::class, 'update']);
     Route::delete('/posts/{id}', [PostController::class, 'destroy']);
+   
 });
